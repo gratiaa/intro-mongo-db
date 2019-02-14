@@ -23,4 +23,14 @@ const orgSchema = new mongoose.Schema({
   }
 })
 
+orgSchema.post('remove', async function(doc, next) {
+  await Project.deleteMany({ org: doc._id }).exec()
+  next()
+})
+
+orgSchema.virtual('avatar')
+  .get(function() {
+    return `${cdnUrl}/${this.id}`
+  })
+
 module.exports = mongoose.model('org', orgSchema)

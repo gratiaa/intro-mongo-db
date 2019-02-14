@@ -3,6 +3,7 @@ const mongoose = require('mongoose')
 const projectSchema = new mongoose.Schema({
   name: {
     type: String,
+    unique: true,
     required: true
   },
   org: {
@@ -24,5 +25,11 @@ const projectSchema = new mongoose.Schema({
     default: false
   }
 })
+
+projectSchema.index({ name: 1 })
+projectSchema.virtual('budgetLeft')
+  .get(function() {
+    return (this.budget - this.spent)
+  })
 
 module.exports = mongoose.model('project', projectSchema)
